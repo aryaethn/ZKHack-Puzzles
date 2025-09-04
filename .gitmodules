@@ -1,0 +1,3 @@
+[submodule "zkhack-bls-pedersen"]
+	path = zkhack-bls-pedersen
+	url = https://github.com/aryaethn/zkhack-bls-pedersen
