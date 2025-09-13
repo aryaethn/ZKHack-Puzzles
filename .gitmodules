@@ -4,3 +4,6 @@
 [submodule "zkhack-trusted-setup"]
 	path = zkhack-trusted-setup
 	url = https://github.com/aryaethn/zkhack-trusted-setup.git
+[submodule "zkhack-double-trouble-solution"]
+	path = zkhack-double-trouble-solution
+	url = https://github.com/aryaethn/zkhack-double-trouble-solution.git

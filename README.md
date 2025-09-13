@@ -40,13 +40,33 @@ A discrete logarithm attack on a BLS12-381 trusted setup ceremony. This puzzle d
 - Modified Rust code that reads the recovered secret from a file
 - Complete working solution with secret recovery
 
+### Puzzle 3: Double Trouble - Inner Product Proof Attack
+**Status**: ✅ Solved  
+**Directory**: `zkhack-double-trouble-solution/`
+
+A zero-knowledge inner product proof vulnerability where the prover uses linearly dependent random vectors instead of independent ones. This demonstrates how poor randomness can completely break zero-knowledge properties.
+
+**Key Concepts**:
+- Zero-knowledge inner product proofs
+- Fiat-Shamir transform
+- Pedersen commitments
+- Linear dependence attacks
+- Randomness requirements in ZK proofs
+
+**Solution**: 
+- Complete Rust implementation that exploits the relationship `r₂ = 2 * r₁`
+- Mathematical attack using the equations: `s₁ = a + γ₁r₁` and `s₂ = a + γ₂r₂`
+- Recovery of both the secret vector `a` and randomness `α`
+- Clean, production-ready code with comprehensive analysis tools
+
 ## Repository Structure
 
 ```
 ZKHack-Puzzles/
-├── zkhack-bls-pedersen/     # Puzzle 1: BLS Pedersen Hash Forgery
-├── zkhack-trusted-setup/    # Puzzle 2: Trusted Setup Attack
-└── bls-signatures/          # BLS signature library (dependency)
+├── zkhack-bls-pedersen/           # Puzzle 1: BLS Pedersen Hash Forgery
+├── zkhack-trusted-setup/          # Puzzle 2: Trusted Setup Attack
+├── zkhack-double-trouble-solution/ # Puzzle 3: Inner Product Proof Attack
+└── bls-signatures/                # BLS signature library (dependency)
 ```
 
 ## Links
