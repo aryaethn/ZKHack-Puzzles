@@ -76,7 +76,7 @@ A shielded pool deanonymization attack exploiting polynomial commitment blinding
 **Solution**: 
 - Complete analysis of the challenge data structure
 - Mathematical solution using linear algebra to recover blinding factors
-- Brute-force approach to find the target account (index 535)
+- Brute-force approach to find the target account
 - Successful reconstruction of the blinded polynomial
 - Full verification that the solution matches the given commitment and openings
 
@@ -91,21 +91,6 @@ ZKHack-Puzzles/
 └── bls-signatures/                     # BLS signature library (dependency)
 ```
 
-## Submodules
-
-This repository uses git submodules for some puzzles to maintain clean separation and allow independent development:
-
-- `zkhack-hidden-in-plain-sight/` - A submodule containing the solution to Puzzle 4
-
-To clone this repository with all submodules:
-```bash
-git clone --recursive https://github.com/aryaethn/ZKHack-Puzzles.git
-```
-
-To update submodules after cloning:
-```bash
-git submodule update --init --recursive
-```
 
 ## Links
 
