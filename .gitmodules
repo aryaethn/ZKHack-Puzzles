@@ -7,3 +7,6 @@
 [submodule "zkhack-double-trouble-solution"]
 	path = zkhack-double-trouble-solution
 	url = https://github.com/aryaethn/zkhack-double-trouble-solution.git
+[submodule "zkhack-hidden-in-plain-sight"]
+	path = zkhack-hidden-in-plain-sight
+	url = https://github.com/aryaethn/zkhack-hidden-in-plain-sight.git
