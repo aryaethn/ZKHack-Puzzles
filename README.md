@@ -40,26 +40,7 @@ A discrete logarithm attack on a BLS12-381 trusted setup ceremony. This puzzle d
 - Modified Rust code that reads the recovered secret from a file
 - Complete working solution with secret recovery
 
-### Puzzle 3: Hidden in Plain Sight - Polynomial Commitment Deanonymization
-**Status**: ✅ Solved  
-**Directory**: `zkhack-hidden-in-plain-sight/` (submodule)
-
-A shielded pool deanonymization attack that exploits the mathematical structure of polynomial commitments with blinding factors. This puzzle demonstrates how seemingly secure cryptographic primitives can be vulnerable when the underlying mathematical relationships are not properly understood.
-
-**Key Concepts**:
-- KZG-like polynomial commitments
-- BLS12-381 elliptic curve
-- Polynomial blinding schemes
-- Evaluation domains and vanishing polynomials
-- Deanonymization attacks on privacy-preserving systems
-
-**Solution**: 
-- Complete Rust implementation that solves the system of linear equations for blinding factors
-- Mathematical attack using the relationship: `Q(x) = P(x) + (b₀ + b₁x) · Z_H(x)`
-- Recovery of the target account (index 535) and blinding factors
-- Analysis tools for understanding the data structure and attack methodology
-
-### Puzzle 4: Double Trouble - Inner Product Proof Attack
+### Puzzle 3: Double Trouble - Inner Product Proof Attack
 **Status**: ✅ Solved  
 **Directory**: `zkhack-double-trouble-solution/`
 
@@ -78,15 +59,52 @@ A zero-knowledge inner product proof vulnerability where the prover uses linearl
 - Recovery of both the secret vector `a` and randomness `α`
 - Clean, production-ready code with comprehensive analysis tools
 
+### Puzzle 4: Hidden in Plain Sight - Polynomial Commitment Deanonymization
+**Status**: ✅ Solved  
+**Directory**: `zkhack-hidden-in-plain-sight/` (submodule)
+
+A shielded pool deanonymization attack exploiting polynomial commitment blinding schemes. This puzzle demonstrates how mathematical relationships in blinded polynomial commitments can be exploited to recover hidden recipient addresses.
+
+**Key Concepts**:
+- KZG polynomial commitments
+- BLS12-381 elliptic curves
+- Polynomial blinding schemes
+- Evaluation domains
+- Linear algebra attacks on blinded polynomials
+- Deanonymization techniques
+
+**Solution**: 
+- Complete analysis of the challenge data structure
+- Mathematical solution using linear algebra to recover blinding factors
+- Brute-force approach to find the target account (index 535)
+- Successful reconstruction of the blinded polynomial
+- Full verification that the solution matches the given commitment and openings
+
 ## Repository Structure
 
 ```
 ZKHack-Puzzles/
 ├── zkhack-bls-pedersen/                # Puzzle 1: BLS Pedersen Hash Forgery
 ├── zkhack-trusted-setup/               # Puzzle 2: Trusted Setup Attack
-├── zkhack-hidden-in-plain-sight/       # Puzzle 3: Polynomial Commitment Deanonymization (submodule)
-├── zkhack-double-trouble-solution/     # Puzzle 4: Inner Product Proof Attack
+├── zkhack-double-trouble-solution/     # Puzzle 3: Inner Product Proof Attack
+├── zkhack-hidden-in-plain-sight/       # Puzzle 4: Polynomial Commitment Deanonymization (submodule)
 └── bls-signatures/                     # BLS signature library (dependency)
+```
+
+## Submodules
+
+This repository uses git submodules for some puzzles to maintain clean separation and allow independent development:
+
+- `zkhack-hidden-in-plain-sight/` - A submodule containing the solution to Puzzle 4
+
+To clone this repository with all submodules:
+```bash
+git clone --recursive https://github.com/aryaethn/ZKHack-Puzzles.git
+```
+
+To update submodules after cloning:
+```bash
+git submodule update --init --recursive
 ```
 
 ## Links
