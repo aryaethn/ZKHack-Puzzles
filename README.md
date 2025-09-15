@@ -80,6 +80,28 @@ A shielded pool deanonymization attack exploiting polynomial commitment blinding
 - Successful reconstruction of the blinded polynomial
 - Full verification that the solution matches the given commitment and openings
 
+### Puzzle 5: Strong Adaptivity - Fiat-Shamir Vulnerability
+**Status**: ✅ Solved  
+**Directory**: `zkhack-strong-adaptivity/`
+
+A zero-knowledge proof vulnerability exploiting the Fiat-Shamir transform's independence from witness messages. This puzzle demonstrates how an attacker can generate valid proofs for commitments with the same message while claiming different messages in the witness.
+
+**Key Concepts**:
+- Fiat-Shamir transform vulnerabilities
+- Pedersen commitments
+- Sigma protocols
+- Strong adaptivity attacks
+- Challenge independence from witness
+- Message equality proofs
+
+**Solution**: 
+- Implemented `fake_prove()` function that exploits the vulnerability
+- Attack works by computing the challenge independently of the witness message
+- Generates valid proof for commitments with same message
+- Creates fake witness claiming different messages
+- Successfully demonstrates the strong adaptivity vulnerability
+- Complete working solution with verification and test cases
+
 ## Repository Structure
 
 ```
@@ -88,6 +110,7 @@ ZKHack-Puzzles/
 ├── zkhack-trusted-setup/               # Puzzle 2: Trusted Setup Attack
 ├── zkhack-double-trouble-solution/     # Puzzle 3: Inner Product Proof Attack
 ├── zkhack-hidden-in-plain-sight/       # Puzzle 4: Polynomial Commitment Deanonymization (submodule)
+├── zkhack-strong-adaptivity/           # Puzzle 5: Strong Adaptivity - Fiat-Shamir Vulnerability
 └── bls-signatures/                     # BLS signature library (dependency)
 ```
 
