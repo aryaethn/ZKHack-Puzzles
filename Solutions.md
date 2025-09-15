@@ -1,0 +1,95 @@
+# Puzzles
+
+## Puzzle 1: BLS Pedersen Hash Forgery
+**Status**: ✅ Solved  
+**Directory**: `zkhack-bls-pedersen/`
+
+A demonstration of how to forge BLS signatures by exploiting the Pedersen hash function. This puzzle shows the importance of using secure hash functions in signature schemes.
+
+**Key Concepts**:
+- BLS signature scheme
+- Pedersen hash function vulnerabilities
+- Signature forgery techniques
+- Hash function security requirements
+
+**Solution**: The puzzle involves creating a collision in the Pedersen hash function to forge valid BLS signatures.
+
+## Puzzle 2: Trusted Setup Attack
+**Status**: ✅ Solved  
+**Directory**: `zkhack-trusted-setup/`
+
+A discrete logarithm attack on a BLS12-381 trusted setup ceremony. This puzzle demonstrates how weak generators in trusted setups can be exploited to recover the secret.
+
+**Key Concepts**:
+- BLS12-381 elliptic curve
+- Trusted setup ceremonies
+- Discrete logarithm attacks
+- Chinese Remainder Theorem (CRT)
+- Cofactor exploitation
+
+**Solution**: 
+- Python script (`solve_trusted_setup.py`) that performs the discrete logarithm attack
+- Modified Rust code that reads the recovered secret from a file
+- Complete working solution with secret recovery
+
+## Puzzle 3: Double Trouble - Inner Product Proof Attack
+**Status**: ✅ Solved  
+**Directory**: `zkhack-double-trouble-solution/`
+
+A zero-knowledge inner product proof vulnerability where the prover uses linearly dependent random vectors instead of independent ones. This demonstrates how poor randomness can completely break zero-knowledge properties.
+
+**Key Concepts**:
+- Zero-knowledge inner product proofs
+- Fiat-Shamir transform
+- Pedersen commitments
+- Linear dependence attacks
+- Randomness requirements in ZK proofs
+
+**Solution**: 
+- Complete Rust implementation that exploits the relationship `r₂ = 2 * r₁`
+- Mathematical attack using the equations: `s₁ = a + γ₁r₁` and `s₂ = a + γ₂r₂`
+- Recovery of both the secret vector `a` and randomness `α`
+- Clean, production-ready code with comprehensive analysis tools
+
+## Puzzle 4: Hidden in Plain Sight - Polynomial Commitment Deanonymization
+**Status**: ✅ Solved  
+**Directory**: `zkhack-hidden-in-plain-sight/` (submodule)
+
+A shielded pool deanonymization attack exploiting polynomial commitment blinding schemes. This puzzle demonstrates how mathematical relationships in blinded polynomial commitments can be exploited to recover hidden recipient addresses.
+
+**Key Concepts**:
+- KZG polynomial commitments
+- BLS12-381 elliptic curves
+- Polynomial blinding schemes
+- Evaluation domains
+- Linear algebra attacks on blinded polynomials
+- Deanonymization techniques
+
+**Solution**: 
+- Complete analysis of the challenge data structure
+- Mathematical solution using linear algebra to recover blinding factors
+- Brute-force approach to find the target account
+- Successful reconstruction of the blinded polynomial
+- Full verification that the solution matches the given commitment and openings
+
+## Puzzle 5: Strong Adaptivity - Fiat-Shamir Vulnerability
+**Status**: ✅ Solved  
+**Directory**: `zkhack-strong-adaptivity/`
+
+A zero-knowledge proof vulnerability exploiting the Fiat-Shamir transform's independence from witness messages. This puzzle demonstrates how an attacker can generate valid proofs for commitments with the same message while claiming different messages in the witness.
+
+**Key Concepts**:
+- Fiat-Shamir transform vulnerabilities
+- Pedersen commitments
+- Sigma protocols
+- Strong adaptivity attacks
+- Challenge independence from witness
+- Message equality proofs
+
+**Solution**: 
+- Implemented `fake_prove()` function that exploits the vulnerability
+- Attack works by computing the challenge independently of the witness message
+- Generates valid proof for commitments with same message
+- Creates fake witness claiming different messages
+- Successfully demonstrates the strong adaptivity vulnerability
+- Complete working solution with verification and test cases
