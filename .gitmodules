@@ -10,3 +10,6 @@
 [submodule "zkhack-hidden-in-plain-sight"]
 	path = zkhack-hidden-in-plain-sight
 	url = https://github.com/aryaethn/zkhack-hidden-in-plain-sight.git
+[submodule "zkhack-strong-adaptivity"]
+	path = zkhack-strong-adaptivity
+	url = https://github.com/aryaethn/zkhack-strong-adaptivity.git
