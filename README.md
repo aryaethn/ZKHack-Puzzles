@@ -13,10 +13,9 @@ ZKHack-Puzzles/
 ├── zkhack-bls-pedersen/                # Puzzle 1: BLS Pedersen Hash Forgery
 ├── zkhack-trusted-setup/               # Puzzle 2: Trusted Setup Attack
 ├── zkhack-double-trouble-solution/     # Puzzle 3: Inner Product Proof Attack
-├── zkhack-hidden-in-plain-sight/       # Puzzle 4: Polynomial Commitment Deanonymization (submodule)
+├── zkhack-hidden-in-plain-sight/       # Puzzle 4: Polynomial Commitment Deanonymization
 ├── zkhack-strong-adaptivity/           # Puzzle 5: Strong Adaptivity - Fiat-Shamir Vulnerability
-├── zkhack-soundness-of-music/          # Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack (submodule)
-└── bls-signatures/                     # BLS signature library (dependency)
+└── zkhack-soundness-of-music/          # Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack
 ```
 
 ## Important Note
