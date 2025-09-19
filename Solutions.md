@@ -93,3 +93,25 @@ A zero-knowledge proof vulnerability exploiting the Fiat-Shamir transform's inde
 - Creates fake witness claiming different messages
 - Successfully demonstrates the strong adaptivity vulnerability
 - Complete working solution with verification and test cases
+
+## Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack
+**Status**: ✅ Solved  
+**Directory**: `zkhack-soundness-of-music/` (submodule)
+
+A zero-knowledge proof soundness vulnerability where the prover can generate valid proofs for mathematically impossible statements. This puzzle demonstrates how to exploit the verification system to prove that 1+1+1+1=1, which is impossible in normal arithmetic.
+
+**Key Concepts**:
+- Zero-knowledge proof soundness
+- BLS12-381 elliptic curve groups
+- Arithmetic circuit constraints
+- Trusted setup exploitation
+- Proof verification bypass techniques
+- Mathematical impossibility proofs
+
+**Solution**: 
+- Implemented `fake_prove()` function that generates fake proofs
+- Exploits the verification system by manipulating proof elements
+- Uses negative public inputs for private input polynomials
+- Sets critical proof elements to zero to bypass constraints
+- Successfully proves the impossible statement 4×1=1
+- Complete working solution with data analysis tools

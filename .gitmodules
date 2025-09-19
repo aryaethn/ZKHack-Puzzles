@@ -13,3 +13,6 @@
 [submodule "zkhack-strong-adaptivity"]
 	path = zkhack-strong-adaptivity
 	url = https://github.com/aryaethn/zkhack-strong-adaptivity.git
+[submodule "zkhack-soundness-of-music"]
+	path = zkhack-soundness-of-music
+	url = https://github.com/aryaethn/zkhack-soundness-of-music.git
