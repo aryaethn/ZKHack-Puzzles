@@ -16,3 +16,6 @@
 [submodule "zkhack-soundness-of-music"]
 	path = zkhack-soundness-of-music
 	url = https://github.com/aryaethn/zkhack-soundness-of-music.git
+[submodule "zkhack-there-is-something-in-the-AIR"]
+	path = zkhack-there-is-something-in-the-AIR
+	url = https://github.com/aryaethn/zkhack-there-is-something-in-the-AIR.git

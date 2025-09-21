@@ -53,7 +53,7 @@ A zero-knowledge inner product proof vulnerability where the prover uses linearl
 
 ## Puzzle 4: Hidden in Plain Sight - Polynomial Commitment Deanonymization
 **Status**: ✅ Solved  
-**Directory**: `zkhack-hidden-in-plain-sight/` (submodule)
+**Directory**: `zkhack-hidden-in-plain-sight/`
 
 A shielded pool deanonymization attack exploiting polynomial commitment blinding schemes. This puzzle demonstrates how mathematical relationships in blinded polynomial commitments can be exploited to recover hidden recipient addresses.
 
@@ -96,7 +96,7 @@ A zero-knowledge proof vulnerability exploiting the Fiat-Shamir transform's inde
 
 ## Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack
 **Status**: ✅ Solved  
-**Directory**: `zkhack-soundness-of-music/` (submodule)
+**Directory**: `zkhack-soundness-of-music/`
 
 A zero-knowledge proof soundness vulnerability where the prover can generate valid proofs for mathematically impossible statements. This puzzle demonstrates how to exploit the verification system to prove that 1+1+1+1=1, which is impossible in normal arithmetic.
 
@@ -115,3 +115,27 @@ A zero-knowledge proof soundness vulnerability where the prover can generate val
 - Sets critical proof elements to zero to bypass constraints
 - Successfully proves the impossible statement 4×1=1
 - Complete working solution with data analysis tools
+
+## Puzzle 7: There is Something in the AIR - Semaphore Double-Vote Bug Fix
+**Status**: ✅ Solved  
+**Directory**: `zkhack-there-is-something-in-the-AIR/`
+
+A critical vulnerability in a Semaphore-style AIR (Algebraic Intermediate Representation) that allowed users to create multiple valid signals with different nullifiers on the same topic. This puzzle demonstrates the importance of proper constraint enforcement in zero-knowledge proof systems.
+
+**Key Concepts**:
+- Semaphore protocol implementation
+- AIR (Algebraic Intermediate Representation) constraints
+- Rescue Prime hash function
+- Merkle tree verification
+- Nullifier generation and uniqueness
+- STARK proof systems
+- Double-vote prevention mechanisms
+
+**Solution**: 
+- **Root Cause**: Nullifier capacity columns (12-15) were being reset to `[0,0,0,0]` instead of maintaining `[8,0,0,0]`
+- **AIR Fixes**: Added boundary constraints to enforce nullifier capacity at first row
+- **Prover Fix**: Removed buggy code that reset nullifier capacity columns
+- **Constraint Fixes**: Fixed duplicate constraint indices and reorganized constraint evaluation
+- **Testing**: Added comprehensive tests to verify deterministic nullifier generation
+- **Result**: Fixed the double-vote bug, ensuring each user can only vote once per topic
+- Complete working solution with proper constraint enforcement and verification

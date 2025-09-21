@@ -15,7 +15,8 @@ ZKHack-Puzzles/
 ├── zkhack-double-trouble-solution/     # Puzzle 3: Inner Product Proof Attack
 ├── zkhack-hidden-in-plain-sight/       # Puzzle 4: Polynomial Commitment Deanonymization
 ├── zkhack-strong-adaptivity/           # Puzzle 5: Strong Adaptivity - Fiat-Shamir Vulnerability
-└── zkhack-soundness-of-music/          # Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack
+├── zkhack-soundness-of-music/          # Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack
+└── zkhack-there-is-something-in-the-AIR/ # Puzzle 7: Semaphore Double-Vote Bug Fix
 ```
 
 ## Important Note
