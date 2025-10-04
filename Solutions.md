@@ -116,7 +116,7 @@ A zero-knowledge proof soundness vulnerability where the prover can generate val
 - Successfully proves the impossible statement 4×1=1
 - Complete working solution with data analysis tools
 
-## Puzzle 7: There is Something in the AIR - Semaphore Double-Vote Bug Fix
+## Puzzle M1: There is Something in the AIR - Semaphore Double-Vote Bug Fix
 **Status**: ✅ Solved  
 **Directory**: `zkhack-there-is-something-in-the-AIR/`
 
@@ -139,3 +139,31 @@ A critical vulnerability in a Semaphore-style AIR (Algebraic Intermediate Repres
 - **Testing**: Added comprehensive tests to verify deterministic nullifier generation
 - **Result**: Fixed the double-vote bug, ensuring each user can only vote once per topic
 - Complete working solution with proper constraint enforcement and verification
+
+## Puzzle M2: Can You Turn Up the Heat - STARK FRI Vulnerability
+**Status**: ✅ Solved  
+**Directory**: `zkhack-can-you-turn-up-the-heat/`
+
+A STARK proof system vulnerability exploiting the FRI (Fast Reed-Solomon Interactive Oracle Proofs) folding mechanism. This puzzle demonstrates how to create fake proofs that pass verification by manipulating the polynomial degree in FRI layer folding.
+
+**Key Concepts**:
+- STARK proof systems
+- FRI (Fast Reed-Solomon Interactive Oracle Proofs) protocol
+- Polynomial degree manipulation
+- Fibonacci sequence verification
+- Degree-respecting projection (DRP)
+- Polynomial interpolation attacks
+- FRI layer folding vulnerabilities
+
+**Solution**: 
+- **Root Cause**: FRI folding mechanism allowed manipulation of polynomial degrees
+- **Hint 3 Implementation**: Modified the `apply_drp` function to force degree 3 polynomial in first FRI layer
+- **Attack Strategy**: Used 4 anchor points to interpolate a cubic polynomial and backfill remaining points
+- **Fake Proof Generation**: Created valid-looking proofs claiming incorrect Fibonacci results (123 instead of 832040)
+- **Verification Bypass**: Exploited the FRI query system to ensure verification succeeds
+- **Technical Details**: 
+  - Folded domain from 128 to 32 elements with folding factor 4
+  - Selected base index 5 and stride 8 for anchor points
+  - Used Lagrange interpolation to create consistent polynomial evaluations
+  - Implemented degree forcing mechanism in FRI layer 1
+- Complete working solution with successful fake proof verification

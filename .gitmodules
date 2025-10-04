@@ -19,3 +19,6 @@
 [submodule "zkhack-there-is-something-in-the-AIR"]
 	path = zkhack-there-is-something-in-the-AIR
 	url = https://github.com/aryaethn/zkhack-there-is-something-in-the-AIR.git
+[submodule "zkhack-can-you-turn-up-the-heat"]
+	path = zkhack-can-you-turn-up-the-heat
+	url = https://github.com/aryaethn/zkhack-can-you-turn-up-the-heat-winterfell.git
