@@ -167,3 +167,31 @@ A STARK proof system vulnerability exploiting the FRI (Fast Reed-Solomon Interac
   - Used Lagrange interpolation to create consistent polynomial evaluations
   - Implemented degree forcing mechanism in FRI layer 1
 - Complete working solution with successful fake proof verification
+
+## Puzzle T1: Zero-Sum Game - Sumcheck Protocol Double-Spending Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-zero-sum-game/`
+
+A private payments protocol vulnerability exploiting the sumcheck protocol where incorrect sum values enable double-spending attacks. This puzzle demonstrates how a prover can craft valid proofs for polynomials with non-zero sums while claiming they sum to zero.
+
+**Key Concepts**:
+- Sumcheck protocol
+- Marlin polynomial commitment scheme (KZG10)
+- BLS12-381 elliptic curves
+- Fiat-Shamir transform
+- Masking polynomials
+- Double-spending attacks
+- Zero-knowledge payment protocols
+
+**Solution**: 
+- **Root Cause**: The verifier uses an incorrect sum value (zero) when the actual polynomial sum over the domain is non-zero
+- **Attack Strategy**: Construct masking polynomial `s(x) = -f(x)` to satisfy the verification equation
+- **Mathematical Relation**: `f(ξ) + s(ξ) = ξ·g(ξ) + h(ξ)·Z_H(ξ) + sum/|H|`
+- **Implementation**: 
+  - Set `g(x) = 0` and `h(x) = 0` for simplicity
+  - Set `s(x) = -f(x)` (non-constant as required)
+  - This ensures `s(ξ) + f(ξ) = 0 = ξ·0 + 0·Z_H(ξ) + 0/|H|`
+- **Fiat-Shamir Consistency**: Derived challenge `ξ` identically to the verifier
+- **Batch Opening**: Created proper QuerySet and batch opening proof for all polynomials
+- **Result**: Successfully passed verification despite the polynomial having a non-zero sum
+- Complete working solution demonstrating how masking polynomials enable double-spending when sum verification is compromised
