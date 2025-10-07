@@ -22,3 +22,6 @@
 [submodule "zkhack-can-you-turn-up-the-heat"]
 	path = zkhack-can-you-turn-up-the-heat
 	url = https://github.com/aryaethn/zkhack-can-you-turn-up-the-heat-winterfell.git
+[submodule "puzzle-zero-sum-game"]
+	path = puzzle-zero-sum-game
+	url = https://github.com/aryaethn/puzzle-zero-sum-game.git
