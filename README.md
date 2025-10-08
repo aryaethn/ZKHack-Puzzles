@@ -18,7 +18,8 @@ ZKHack-Puzzles/
 ├── zkhack-soundness-of-music/              # Puzzle 6: Soundness of Music - Zero-Knowledge Proof Soundness Attack
 ├── zkhack-there-is-something-in-the-AIR/   # Puzzle M1: Semaphore Double-Vote Bug Fix
 ├── zkhack-can-you-turn-up-the-heat/        # Puzzle M2: Can You Turn Up the Heat - STARK FRI Vulnerability
-└── puzzle-zero-sum-game/                   # Puzzle T1: Zero-Sum Game - Sumcheck Protocol Double-Spending Attack
+├── puzzle-zero-sum-game/                   # Puzzle T1: Zero-Sum Game - Sumcheck Protocol Double-Spending Attack
+└── puzzle-power-corrupts/                  # Puzzle T2: Power Corrupts - Cheon Attack on Trusted Setup
 ```
 
 ## Important Note

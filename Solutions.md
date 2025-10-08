@@ -195,3 +195,39 @@ A private payments protocol vulnerability exploiting the sumcheck protocol where
 - **Batch Opening**: Created proper QuerySet and batch opening proof for all polynomials
 - **Result**: Successfully passed verification despite the polynomial having a non-zero sum
 - Complete working solution demonstrating how masking polynomials enable double-spending when sum verification is compromised
+
+## Puzzle T2: Power Corrupts - Cheon Attack on Trusted Setup
+**Status**: ✅ Solved  
+**Directory**: `puzzle-power-corrupts/`
+
+A cryptographic attack exploiting a vulnerable BLS12-Cheon pairing-friendly elliptic curve trusted setup. This puzzle demonstrates how the Cheon attack can recover secret parameters when the sum of SRS powers divides the group order, combined with social engineering intelligence about the secret's structure.
+
+**Key Concepts**:
+- Cheon attack on pairing-based cryptography
+- BLS12 pairing-friendly elliptic curves
+- Trusted setup vulnerabilities
+- Baby-step giant-step (BSGS) algorithm
+- Discrete logarithm problem
+- Groth16 SRS exploitation
+- Group order divisibility attacks
+
+**Solution**: 
+- **Root Cause**: The sum `d = d₁ + d₂ = 702,047,372` divides `q-1` where `q = 1,114,157,594,638,178,892,192,613`
+- **Attack Strategy**: Exploit the mathematical relationship τ = 2^(k₀ + k₁·m) where m = (q-1)/d
+- **Social Engineering Intelligence**: k₀ is 51 bits with 15 MSBs = `10111101110` (range: 1,089,478,584,172,543 to 1,089,547,303,649,280)
+- **Two-Phase BSGS Attack**:
+  - **Phase 1**: Find k₀ using BSGS on g^(2^d)^c = k where k = e(τ^d₁·P, τ^d₂·Q)
+    - Table size: 2^20 (baby steps)
+    - Search space: ~68 billion values reduced to ~1.5 million via intelligence
+    - Result: k₀ = 1,089,539,821,761,426
+  - **Phase 2**: Find k₁ using BSGS on g^(η^c) = h·2^(-k₀) where η = 2^m
+    - Table size: 2^16 (baby steps)  
+    - Search space: ~702 million values
+    - Result: k₁ = 690,599,720
+- **Final Calculation**: τ = 2^(k₀ + k₁·m) = 284,865,198,031,253,921,498,207
+- **Performance**: 
+  - k₀ recovery: ~53.5 seconds
+  - k₁ recovery: ~4.8 seconds
+  - Total attack time: ~58 seconds
+- **Verification**: Successfully verified P·τ = τP ✅
+- Complete working solution with efficient BSGS implementation and proper field arithmetic
