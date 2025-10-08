@@ -25,3 +25,6 @@
 [submodule "puzzle-zero-sum-game"]
 	path = puzzle-zero-sum-game
 	url = https://github.com/aryaethn/puzzle-zero-sum-game.git
+[submodule "puzzle-power-corrupts"]
+	path = puzzle-power-corrupts
+	url = https://github.com/aryaethn/puzzle-power-corrupts.git
