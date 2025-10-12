@@ -231,3 +231,39 @@ A cryptographic attack exploiting a vulnerable BLS12-Cheon pairing-friendly elli
   - Total attack time: ~58 seconds
 - **Verification**: Successfully verified P·τ = τP ✅
 - Complete working solution with efficient BSGS implementation and proper field arithmetic
+
+## Puzzle T3: Bigger is Better - Inner Product Commitment SRS Leak
+**Status**: ✅ Solved  
+**Directory**: `puzzle-bigger-is-better/`
+
+A soundness vulnerability in an inner-product commitment scheme (ILV) where a malicious trusted setup ceremony accidentally included an extra SRS element. This puzzle demonstrates how a single leaked cryptographic parameter can completely break the soundness of a commitment scheme.
+
+**Key Concepts**:
+- Inner-product commitment schemes
+- Structured Reference String (SRS) security
+- Powers-of-Tau trusted setup vulnerabilities
+- BLS12-381 elliptic curves
+- Polynomial commitment soundness
+- Pairing-based cryptography
+
+**Solution**: 
+- **Root Cause**: The SRS contains 514 elements in `powers_of_beta_g_first` instead of the expected 513
+- **Leaked Element**: β^(dim+1)·G = β^513·G is available at index 513, but should have been excluded
+- **Vulnerability**: The honest protocol skips coefficient (dim+1) when constructing proofs, assuming the SRS element is unavailable
+- **Attack Strategy**: 
+  1. Generate an honest proof using `ILV::open(ck, a, b)` which encodes the actual inner product
+  2. Compute the difference: `Δ = actual_inner_product - claimed_inner_product`
+  3. Add the malicious term: `Δ · β^(dim+1) · G` to the honest proof
+  4. The modified proof verifies with the fake claimed inner product!
+- **Implementation**:
+  ```rust
+  let honest_proof = algorithms::ILV::<E>::open(&ck, &a, &b);
+  let difference = actual_inner_product - claimed_inner_product;
+  let malicious_term = ck.powers_of_beta_g_first[dim + 1].mul(difference.into_repr());
+  let proof = Proof((honest_proof.0.into_projective() + malicious_term).into_affine());
+  ```
+- **Mathematical Insight**: The verification equation implicitly uses `claimed_ip · β^(dim+1)` to "fill the gap" at position (dim+1). Since the prover can explicitly add any value at this position using the leaked SRS element, they can make any claimed value verify.
+- **Impact**: Complete soundness break - the attacker can forge proofs for any false inner product claim
+- **Title Meaning**: "Bigger is Better" refers to the SRS being too big (514 elements instead of 513)
+- **Result**: Successfully created forged proofs that verify with incorrect inner product values
+- Complete working solution demonstrating elegant attack using existing honest algorithms plus one malicious modification
