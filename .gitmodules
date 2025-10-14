@@ -31,3 +31,6 @@
 [submodule "puzzle-bigger-is-better"]
 	path = puzzle-bigger-is-better
 	url = https://github.com/aryaethn/puzzle-bigger-is-better.git
+[submodule "puzzle-gamma-ray"]
+	path = puzzle-gamma-ray
+	url = https://github.com/aryaethn/puzzle-gamma-ray.git
