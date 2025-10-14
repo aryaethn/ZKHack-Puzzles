@@ -267,3 +267,43 @@ A soundness vulnerability in an inner-product commitment scheme (ILV) where a ma
 - **Title Meaning**: "Bigger is Better" refers to the SRS being too big (514 elements instead of 513)
 - **Result**: Successfully created forged proofs that verify with incorrect inner product values
 - Complete working solution demonstrating elegant attack using existing honest algorithms plus one malicious modification
+
+## Puzzle F1: Gamma Ray - Elliptic Curve Double-Spend Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-gamma-ray/`
+
+A Zcash-inspired private transaction system vulnerability where only the x-coordinate of elliptic curve public keys is stored in the Merkle tree. This design flaw enables double-spending attacks by exploiting the fact that points (x, y) and (x, -y) are both valid on the curve but produce different nullifiers.
+
+**Key Concepts**:
+- Elliptic curve cryptography
+- Groth16 zkSNARKs
+- MNT4-753/MNT6-753 curve cycles
+- Merkle tree commitments
+- Nullifier-based double-spend prevention
+- Public key representation vulnerabilities
+
+**Solution**: 
+- **Root Cause**: The circuit only stores `pk.x` (x-coordinate) in the Merkle tree leaf (line 113: `let leaf_g: Vec<_> = vec![pk.x];`)
+- **Vulnerability**: For any point P = (x, y) on an elliptic curve, the point -P = (x, -y) is also valid
+- **Attack Strategy**: 
+  1. Original spend: Uses `secret = leaked_secret` → produces `pk = G·s = (x, y)`
+  2. Double spend: Uses `secret_hack = -leaked_secret` → produces `pk_hack = G·(-s) = (x, -y)`
+  3. Both have the same x-coordinate, so both pass Merkle tree verification
+  4. But `Hash(s) ≠ Hash(-s)`, creating different nullifiers
+- **Implementation**:
+  ```rust
+  // Convert to MNT6 scalar field, negate, then convert back to MNT4 field
+  let leaked_secret_mnt6 = MNT6BigFr::from_le_bytes_mod_order(&leaked_secret.into_bigint().to_bytes_le());
+  let secret_hack_mnt6 = -leaked_secret_mnt6;
+  let secret_hack = MNT4BigFr::from_le_bytes_mod_order(&secret_hack_mnt6.into_bigint().to_bytes_le());
+  let nullifier_hack = <LeafH as CRHScheme>::evaluate(&leaf_crh_params, vec![secret_hack]).unwrap();
+  ```
+- **Technical Details**: 
+  - Negation performed in MNT6 scalar field (elliptic curve group order)
+  - Circuit constraint (line 98) enforces `secret <= MNT6BigFr::MODULUS`
+  - Both secrets satisfy this constraint after proper field conversion
+  - Poseidon hash used for nullifier generation
+- **Impact**: Complete double-spend attack - same coin can be spent twice with different nullifiers
+- **Fix**: Store the full public key point (both x and y coordinates) in the Merkle tree
+- **Result**: Successfully created two valid proofs for the same coin with different nullifiers
+- Complete working solution demonstrating a critical vulnerability in elliptic curve-based privacy systems
