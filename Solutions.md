@@ -307,3 +307,63 @@ A Zcash-inspired private transaction system vulnerability where only the x-coord
 - **Fix**: Store the full public key point (both x and y coordinates) in the Merkle tree
 - **Result**: Successfully created two valid proofs for the same coin with different nullifiers
 - Complete working solution demonstrating a critical vulnerability in elliptic curve-based privacy systems
+
+## Puzzle F2: Supervillain - BLS Signature Rogue Key Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-supervillain/`
+
+A BLS signature aggregation vulnerability exploiting a flawed proof-of-possession (PoP) scheme. This puzzle demonstrates how a malleable PoP scheme using per-index points enables rogue key attacks, allowing an attacker to forge aggregate signatures without knowing any private keys.
+
+**Key Concepts**:
+- BLS signature aggregation
+- Proof-of-possession (PoP) schemes
+- Rogue key attacks
+- B-KEA assumption vulnerabilities
+- Pairing-based cryptography
+- BLS12-381 elliptic curves
+
+**Solution**: 
+- **Root Cause**: The PoP scheme uses different points for each index: `derive_point_for_pok(i) = (i+1) · G2`
+- **Critical Flaw**: Unlike secure PoP schemes (e.g., Sapling) that use a single shared point, this per-index approach makes the scheme malleable
+- **Vulnerability**: The malleability allows combining existing PoP proofs to create valid proofs for keys with unknown discrete logs
+- **Attack Strategy**: 
+  1. **Rogue Key Construction**: Set `new_key = -Σ(pk_i)` to cancel all existing public keys
+  2. **Malleable PoP Exploit**: Create valid proof without knowing the secret key
+     - For existing key at index i: `e(pk_i, (i+1)·G2) = e(G1, proof_i)`
+     - This means: `e(pk_i, G2)^(i+1) = e(G1, proof_i)`
+     - Therefore: `e(pk_i, G2) = e(G1, proof_i/(i+1))`
+  3. **Mathematical Derivation**: For new key at index n:
+     ```
+     e(new_key, (n+1)·G2) = e(-Σ(pk_i), (n+1)·G2)
+                          = Π e(pk_i, G2)^(-(n+1))
+                          = Π e(G1, proof_i/(i+1))^(-(n+1))
+                          = e(G1, Σ(-(n+1)/(i+1) · proof_i))
+     ```
+     Therefore: `new_proof = Σ(-(n+1)/(i+1) · proof_i)`
+  4. **Aggregate Key Cancellation**: `aggregate_key = new_key + Σ(pk_i) = 0`
+  5. **Signature Forgery**: Any signature on the zero key is valid, so `aggregate_signature = 0`
+- **Implementation**:
+  ```rust
+  // Step 1: Cancel all existing keys
+  let sum_of_pks = public_keys.iter()
+      .fold(G1Projective::zero(), |acc, (pk, _)| acc + pk);
+  let new_key = sum_of_pks.neg().into_affine();
+  
+  // Step 2: Create valid PoP by combining existing proofs
+  let n = new_key_index as u64;
+  let new_proof = public_keys.iter().enumerate()
+      .fold(G2Projective::zero(), |acc, (i, (_, proof))| {
+          let coefficient = -(Fr::from(n + 1) / Fr::from((i as u64) + 1));
+          acc + proof.mul(coefficient)
+      }).into_affine();
+  
+  // Step 3: Zero aggregate key → zero signature
+  let aggregate_signature = G2Affine::zero();
+  ```
+- **References**: 
+  - [Power of Proofs-of-Possession Paper](https://rist.tech.cornell.edu/papers/pkreg.pdf)
+  - [Sapling Security Analysis by Mary Maller](https://github.com/zcash/sapling-security-analysis/blob/master/MaryMallerUpdated.pdf)
+- **Impact**: Complete aggregation security break - attacker can forge valid aggregate signatures without any private keys
+- **Fix**: Use a single, shared point for all PoP verifications instead of per-index points
+- **Result**: Successfully created malicious key with valid PoP and forged aggregate signature
+- Complete working solution demonstrating why PoP scheme design is critical for BLS signature aggregation security
