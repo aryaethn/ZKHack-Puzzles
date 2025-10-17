@@ -34,3 +34,6 @@
 [submodule "puzzle-gamma-ray"]
 	path = puzzle-gamma-ray
 	url = https://github.com/aryaethn/puzzle-gamma-ray.git
+[submodule "puzzle-supervillain"]
+	path = puzzle-supervillain
+	url = https://github.com/aryaethn/puzzle-supervillain.git
