@@ -22,7 +22,8 @@ ZKHack-Puzzles/
 ├── puzzle-power-corrupts/                  # Puzzle T2: Power Corrupts - Cheon Attack on Trusted Setup
 ├── puzzle-bigger-is-better/                # Puzzle T3: Bigger is Better - Inner Product Commitment SRS Leak
 ├── puzzle-gamma-ray/                       # Puzzle F1: Gamma Ray - Elliptic Curve Double-Spend Attack
-└── puzzle-supervillain/                    # Puzzle F2: Supervillain - BLS Signature Rogue Key Attack
+├── puzzle-supervillain/                    # Puzzle F2: Supervillain - BLS Signature Rogue Key Attack
+└── puzzle-chaos-theory/                    # Puzzle F3: Chaos Theory - ElGamal + BLS Key Reuse Attack
 ```
 
 ## Important Note

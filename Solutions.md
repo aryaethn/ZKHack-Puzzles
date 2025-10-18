@@ -367,3 +367,69 @@ A BLS signature aggregation vulnerability exploiting a flawed proof-of-possessio
 - **Fix**: Use a single, shared point for all PoP verifications instead of per-index points
 - **Result**: Successfully created malicious key with valid PoP and forged aggregate signature
 - Complete working solution demonstrating why PoP scheme design is critical for BLS signature aggregation security
+
+## Puzzle F3: Chaos Theory - ElGamal + BLS Key Reuse Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-chaos-theory/`
+
+A cryptographic vulnerability exploiting key reuse between ElGamal encryption and BLS signatures. This puzzle demonstrates how using the same secret key for both encryption and signing enables an attacker to decrypt messages using pairing-based algebraic manipulations.
+
+**Key Concepts**:
+- ElGamal encryption
+- BLS signatures
+- Pairing-based cryptography
+- BLS12-381 elliptic curves
+- Bilinear pairings
+- Key separation principle
+- Encrypt-then-sign schemes
+
+**Solution**: 
+- **Root Cause**: The sender's secret key `s_k` is used for both ElGamal encryption and BLS signature generation:
+  - Encryption: `C_2 = R_pk · s_k + M`
+  - Signature: `S = H(C) · s_k`
+- **Vulnerability**: This key reuse creates an exploitable algebraic relationship via pairing bilinearity
+- **Attack Strategy**: 
+  1. **Starting Relationship**: Consider the pairing `e(C_2, H(C))`
+  2. **Substitute C_2**: `e(R_pk · s_k + M, H(C))`
+  3. **Bilinearity Split**: `e(R_pk · s_k, H(C)) · e(M, H(C))`
+  4. **Scalar Move**: Move `s_k` from G1 to G2: `e(R_pk, H(C) · s_k) · e(M, H(C))`
+  5. **Signature Substitution**: Replace `H(C) · s_k` with `S`: `e(R_pk, S) · e(M, H(C))`
+  6. **Isolate Message**: Rearrange to solve for message term:
+     ```
+     e(M, H(C)) = e(C_2, H(C)) · e(R_pk, S)^(-1)
+     ```
+- **Implementation**:
+  ```rust
+  let (_c1, c2) = (blob.c.0, blob.c.1);
+  let hash_c = blob.c.hash_to_curve();
+  
+  // Calculate target pairing: e(C_2, H(C)) * e(R_pk, S)^-1
+  let target_pairing = {
+      let lhs = Bls12_381::pairing(c2, hash_c);
+      // e(R_pk, S)^-1 is equivalent to e(-R_pk, S)
+      let rhs = Bls12_381::pairing(blob.rec_pk.mul(-Fr::from(1u64)), blob.s);
+      lhs + rhs  // Multiplication in pairing group = addition in code
+  };
+  
+  // Brute-force search through message space
+  for (i, msg) in messages.iter().enumerate() {
+      let test_pairing = Bls12_381::pairing(msg.0, hash_c);
+      if test_pairing == target_pairing {
+          found_index = i;
+          break;
+      }
+  }
+  ```
+- **Mathematical Insight**: 
+  - Pairing bilinearity: `e(aP, bQ) = e(P, Q)^(ab) = e(bP, aQ)`
+  - The signature provides the missing piece `H(C) · s_k` to cancel out `s_k` from the encryption
+  - Result is an equation that only depends on the message `M`
+- **Attack Properties**:
+  - No secret key recovery needed
+  - Works with small message space (brute-force search)
+  - Completely breaks confidentiality
+  - Signature provides decryption oracle
+- **Impact**: Complete confidentiality break - attacker can decrypt any message by testing candidates against the pairing equation
+- **Fix**: Use separate, independent keys for encryption and signing (key separation principle)
+- **Result**: Successfully recovered the encrypted message index from the blob
+- Complete working solution demonstrating why **key separation** is critical in cryptographic protocols - never reuse keys across different primitives!
