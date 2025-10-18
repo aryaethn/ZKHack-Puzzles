@@ -37,3 +37,6 @@
 [submodule "puzzle-supervillain"]
 	path = puzzle-supervillain
 	url = https://github.com/aryaethn/puzzle-supervillain.git
+[submodule "puzzle-chaos-theory"]
+	path = puzzle-chaos-theory
+	url = https://github.com/aryaethn/puzzle-chaos-theory.git
