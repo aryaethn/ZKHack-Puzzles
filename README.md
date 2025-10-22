@@ -23,7 +23,8 @@ ZKHack-Puzzles/
 ├── puzzle-bigger-is-better/                # Puzzle T3: Bigger is Better - Inner Product Commitment SRS Leak
 ├── puzzle-gamma-ray/                       # Puzzle F1: Gamma Ray - Elliptic Curve Double-Spend Attack
 ├── puzzle-supervillain/                    # Puzzle F2: Supervillain - BLS Signature Rogue Key Attack
-└── puzzle-chaos-theory/                    # Puzzle F3: Chaos Theory - ElGamal + BLS Key Reuse Attack
+├── puzzle-chaos-theory/                    # Puzzle F3: Chaos Theory - ElGamal + BLS Key Reuse Attack
+└── puzzle-zeitgeist/                       # Puzzle V1: Zeitgeist - Halo2 Verifier Polynomial Leakage Attack
 ```
 
 ## Important Note

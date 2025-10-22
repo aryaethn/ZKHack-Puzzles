@@ -342,24 +342,6 @@ A BLS signature aggregation vulnerability exploiting a flawed proof-of-possessio
      Therefore: `new_proof = Σ(-(n+1)/(i+1) · proof_i)`
   4. **Aggregate Key Cancellation**: `aggregate_key = new_key + Σ(pk_i) = 0`
   5. **Signature Forgery**: Any signature on the zero key is valid, so `aggregate_signature = 0`
-- **Implementation**:
-  ```rust
-  // Step 1: Cancel all existing keys
-  let sum_of_pks = public_keys.iter()
-      .fold(G1Projective::zero(), |acc, (pk, _)| acc + pk);
-  let new_key = sum_of_pks.neg().into_affine();
-  
-  // Step 2: Create valid PoP by combining existing proofs
-  let n = new_key_index as u64;
-  let new_proof = public_keys.iter().enumerate()
-      .fold(G2Projective::zero(), |acc, (i, (_, proof))| {
-          let coefficient = -(Fr::from(n + 1) / Fr::from((i as u64) + 1));
-          acc + proof.mul(coefficient)
-      }).into_affine();
-  
-  // Step 3: Zero aggregate key → zero signature
-  let aggregate_signature = G2Affine::zero();
-  ```
 - **References**: 
   - [Power of Proofs-of-Possession Paper](https://rist.tech.cornell.edu/papers/pkreg.pdf)
   - [Sapling Security Analysis by Mary Maller](https://github.com/zcash/sapling-security-analysis/blob/master/MaryMallerUpdated.pdf)
@@ -398,28 +380,6 @@ A cryptographic vulnerability exploiting key reuse between ElGamal encryption an
      ```
      e(M, H(C)) = e(C_2, H(C)) · e(R_pk, S)^(-1)
      ```
-- **Implementation**:
-  ```rust
-  let (_c1, c2) = (blob.c.0, blob.c.1);
-  let hash_c = blob.c.hash_to_curve();
-  
-  // Calculate target pairing: e(C_2, H(C)) * e(R_pk, S)^-1
-  let target_pairing = {
-      let lhs = Bls12_381::pairing(c2, hash_c);
-      // e(R_pk, S)^-1 is equivalent to e(-R_pk, S)
-      let rhs = Bls12_381::pairing(blob.rec_pk.mul(-Fr::from(1u64)), blob.s);
-      lhs + rhs  // Multiplication in pairing group = addition in code
-  };
-  
-  // Brute-force search through message space
-  for (i, msg) in messages.iter().enumerate() {
-      let test_pairing = Bls12_381::pairing(msg.0, hash_c);
-      if test_pairing == target_pairing {
-          found_index = i;
-          break;
-      }
-  }
-  ```
 - **Mathematical Insight**: 
   - Pairing bilinearity: `e(aP, bQ) = e(P, Q)^(ab) = e(bP, aQ)`
   - The signature provides the missing piece `H(C) · s_k` to cancel out `s_k` from the encryption
@@ -433,3 +393,61 @@ A cryptographic vulnerability exploiting key reuse between ElGamal encryption an
 - **Fix**: Use separate, independent keys for encryption and signing (key separation principle)
 - **Result**: Successfully recovered the encrypted message index from the blob
 - Complete working solution demonstrating why **key separation** is critical in cryptographic protocols - never reuse keys across different primitives!
+
+## Puzzle V1: Zeitgeist - Halo2 Verifier Polynomial Leakage Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-zeitgeist/`
+
+A Halo2 zero-knowledge proof vulnerability where the verifier exposes polynomial evaluations at challenge points, enabling an attacker to recover the secret witness through Lagrange interpolation. This puzzle demonstrates how information leakage during verification can completely break the zero-knowledge property.
+
+**Key Concepts**:
+- Halo2 proving system
+- Poseidon hash circuits
+- Polynomial commitments (KZG + SHPLONK)
+- Lagrange interpolation attacks
+- Verifier information leakage
+- BN256 elliptic curves
+- Zero-knowledge property violations
+
+**Solution**: 
+- **Root Cause**: The Halo2 verifier exposes evaluations `advice_evals[0][1]` at challenge points `x` during proof verification
+- **Vulnerability**: The secret witness resides in advice column index 1 at position 3, and remains constant across all proofs (independent of the nonce)
+- **Attack Strategy**: 
+  1. **Data Collection**: Capture 64 verification attempts to collect polynomial evaluations
+     - Each verification exposes `x` (challenge point) and `advice_evals[0][1]` (evaluation at x)
+     - All proofs use the same secret but different random nonces
+  2. **Polynomial Reconstruction**: Use Lagrange interpolation to reconstruct the polynomial
+     ```rust
+     let coeffs = lagrange_interpolate(&all_xs, &first_evals);
+     ```
+     - With 64 points, we can uniquely reconstruct a polynomial of degree ≤ 63
+  3. **Secret Extraction**: Evaluate the reconstructed polynomial at ω²
+     ```rust
+     let w = Fr::from_str_vartime("12799441450189702121232122059226990287081568291547011007819741462284200902087").unwrap();
+     let secret = eval_polynomial(&coeffs, w.square());
+     ```
+     - The value ω is the primitive root of unity for the evaluation domain
+     - ω² corresponds to position 3 in the domain (where the secret resides)
+- **Implementation Details**:
+  - Modified `halo2_proofs/src/plonk/verifier.rs` to capture evaluation data
+  - Added global storage using `Mutex<Vec<String>>` for thread-safe data collection
+  - Implemented hex string parsing with proper little-endian byte ordering
+  - Extracted evaluation at index 1 (not 0) as specified in the hints
+- **Mathematical Insight**: 
+  - The circuit uses two Poseidon hashes: one for commitment, one for nullifier
+  - Commitment: `Poseidon(secret, 0)` - independent of nonce
+  - Nullifier: `Poseidon(secret, nonce)` - varies with each proof
+  - The secret polynomial remains the same across all proofs, while nullifier polynomials differ
+- **Recovered Secret**: 
+  ```
+  0x066ab256379d1a0d7bd1dd54cf3f4171edbf5ca3976e8956fe0ddd10af67418d
+  ```
+- **Verification**: 
+  ```rust
+  assert_eq!(Poseidon(secret, 0), commitment); // ✅ Passed
+  ```
+- **Impact**: Complete zero-knowledge break - the verifier leaks enough information to reconstruct the private witness
+- **Fix**: Verifier should never expose intermediate polynomial evaluations; only verify without returning sensitive data
+- **Puzzle Name Insight**: "Zeitgeist" (German for "spirit of the times") hints at the time-dependent nature of collecting multiple proofs over time
+- **Result**: Successfully extracted Bob's secret private key from 64 intercepted proof verifications
+- Complete working solution with comprehensive documentation (ANALYSIS.md, MECHANISM_EXPLAINED.md, PUZZLE_SUMMARY.md)
