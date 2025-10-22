@@ -40,3 +40,6 @@
 [submodule "puzzle-chaos-theory"]
 	path = puzzle-chaos-theory
 	url = https://github.com/aryaethn/puzzle-chaos-theory.git
+[submodule "puzzle-zeitgeist"]
+	path = puzzle-zeitgeist
+	url = https://github.com/aryaethn/puzzle-zeitgeist.git
