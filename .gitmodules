@@ -43,3 +43,6 @@
 [submodule "puzzle-zeitgeist"]
 	path = puzzle-zeitgeist
 	url = https://github.com/aryaethn/puzzle-zeitgeist.git
+[submodule "puzzle-dont-look-up"]
+	path = puzzle-dont-look-up
+	url = https://github.com/aryaethn/puzzle-dont-look-up.git
