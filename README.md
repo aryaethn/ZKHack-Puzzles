@@ -24,7 +24,8 @@ ZKHack-Puzzles/
 ├── puzzle-gamma-ray/                       # Puzzle F1: Gamma Ray - Elliptic Curve Double-Spend Attack
 ├── puzzle-supervillain/                    # Puzzle F2: Supervillain - BLS Signature Rogue Key Attack
 ├── puzzle-chaos-theory/                    # Puzzle F3: Chaos Theory - ElGamal + BLS Key Reuse Attack
-└── puzzle-zeitgeist/                       # Puzzle V1: Zeitgeist - Halo2 Verifier Polynomial Leakage Attack
+├── puzzle-zeitgeist/                       # Puzzle V1: Zeitgeist - Halo2 Verifier Polynomial Leakage Attack
+└── puzzle-dont-look-up/                    # Puzzle V2: Don't Look Up - ProtoStar Lookup Protocol Attack
 ```
 
 ## Important Note

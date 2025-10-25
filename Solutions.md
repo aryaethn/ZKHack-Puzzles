@@ -451,3 +451,48 @@ A Halo2 zero-knowledge proof vulnerability where the verifier exposes polynomial
 - **Puzzle Name Insight**: "Zeitgeist" (German for "spirit of the times") hints at the time-dependent nature of collecting multiple proofs over time
 - **Result**: Successfully extracted Bob's secret private key from 64 intercepted proof verifications
 - Complete working solution with comprehensive documentation (ANALYSIS.md, MECHANISM_EXPLAINED.md, PUZZLE_SUMMARY.md)
+
+## Puzzle V2: Don't Look Up - ProtoStar Lookup Protocol Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-dont-look-up/`
+
+A zero-knowledge lookup protocol vulnerability exploiting small field sizes in the ProtoStar special-sound lookup protocol. This puzzle demonstrates how to create valid proofs for values outside the intended range by exploiting the field arithmetic properties and multiplicity vector manipulation.
+
+**Key Concepts**:
+- ProtoStar lookup protocol (variant of LogUp)
+- Special-sound lookup arguments
+- Logarithmic derivatives
+- Small field size vulnerabilities
+- Multiplicity vector manipulation
+- Range check bypass techniques
+- Field extension security
+
+**Solution**: 
+- **Root Cause**: The protocol uses a small prime field (p = 70,937) and allows manipulation of the multiplicity vector
+- **Vulnerability**: The verification equation `sum(h_i) = sum(g_i)` can be satisfied by setting all multiplicities to zero
+- **Attack Strategy**: 
+  1. **Witness Vector**: Create a vector of length p (70,937) where every element is 2^15 (32,768)
+  2. **Multiplicity Vector**: Set all elements in the multiplicity vector m to zero
+  3. **Mathematical Exploit**: Since 2^15 is not in the range [0, 2^6-1] = [0, 63], it doesn't appear in the lookup table
+  4. **Verification Bypass**: The sum of multiplicities becomes 0, making the verification equation hold
+- **Implementation**:
+  ```rust
+  // Create witness vector of length p with all elements being 2^15
+  let witness = vec![FieldElement::new(vec![1<<15], p, irr.clone()); p as usize];
+  // Create multiplicity vector m of all zeros
+  let m = vec![FieldElement::new(vec![0], p, irr.clone()); 1<<6];
+  ```
+- **Technical Details**:
+  - Field size: p = 70,937 (≈16-bit prime)
+  - Extension field: x^6 + 70897x^5 + 34941x^4 + 45405x^3 + 15086x^2 + 39025x + 3
+  - Target value: 2^15 = 32,768 (outside range [0, 63])
+  - Protocol: ProtoStar special-sound lookup (Section 4.3, p. 34)
+- **Mathematical Insight**: 
+  - The protocol verifies that witness elements are in the lookup table by checking multiplicities
+  - By setting multiplicities to zero, we bypass the range check entirely
+  - The small field size enables this attack by making the witness vector manageable
+- **Impact**: Complete range check bypass - can prove any value is "in range" regardless of actual value
+- **Security Lesson**: Small fields combined with lookup protocols can create unexpected vulnerabilities
+- **Puzzle Name Insight**: "Don't Look Up" refers to not looking up values in the table (bypassing the lookup check)
+- **Result**: Successfully created a valid proof that 2^15 is in the range [0, 63] when it's actually not
+- Complete working solution demonstrating how field size and protocol design interact to create vulnerabilities
