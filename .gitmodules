@@ -46,3 +46,6 @@
 [submodule "puzzle-dont-look-up"]
 	path = puzzle-dont-look-up
 	url = https://github.com/aryaethn/puzzle-dont-look-up.git
+[submodule "puzzle-shadow"]
+	path = puzzle-shadow
+	url = https://github.com/aryaethn/puzzle-shadow.git
