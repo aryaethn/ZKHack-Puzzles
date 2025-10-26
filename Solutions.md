@@ -475,13 +475,6 @@ A zero-knowledge lookup protocol vulnerability exploiting small field sizes in t
   2. **Multiplicity Vector**: Set all elements in the multiplicity vector m to zero
   3. **Mathematical Exploit**: Since 2^15 is not in the range [0, 2^6-1] = [0, 63], it doesn't appear in the lookup table
   4. **Verification Bypass**: The sum of multiplicities becomes 0, making the verification equation hold
-- **Implementation**:
-  ```rust
-  // Create witness vector of length p with all elements being 2^15
-  let witness = vec![FieldElement::new(vec![1<<15], p, irr.clone()); p as usize];
-  // Create multiplicity vector m of all zeros
-  let m = vec![FieldElement::new(vec![0], p, irr.clone()); 1<<6];
-  ```
 - **Technical Details**:
   - Field size: p = 70,937 (≈16-bit prime)
   - Extension field: x^6 + 70897x^5 + 34941x^4 + 45405x^3 + 15086x^2 + 39025x + 3
@@ -496,3 +489,40 @@ A zero-knowledge lookup protocol vulnerability exploiting small field sizes in t
 - **Puzzle Name Insight**: "Don't Look Up" refers to not looking up values in the table (bypassing the lookup check)
 - **Result**: Successfully created a valid proof that 2^15 is in the range [0, 63] when it's actually not
 - Complete working solution demonstrating how field size and protocol design interact to create vulnerabilities
+## Puzzle V3: Shadow - JWT.pk Identity Infrastructure Attack
+**Status**: ✅ Solved  
+**Directory**: `puzzle-shadow/`
+
+A critical vulnerability in an identity infrastructure system where the identifier format allows manipulation to impersonate other users. This puzzle demonstrates how improper identifier concatenation and verification can enable account takeover attacks in zero-knowledge proof-based authentication systems.
+
+**Key Concepts**:
+- Identity infrastructure authentication
+- SHA256 hashing in ZK circuits
+- Identifier format vulnerabilities
+- String concatenation attacks
+- Account impersonation attacks
+- Noir zero-knowledge proofs
+
+**Solution**: 
+- **Root Cause**: The identifier format `"{pk}_{pepper}"` uses an underscore separator without delimiting the end of the pk string
+- **Vulnerability**: The circuit only verifies that Bob's public key appears *somewhere* in the identifier, not that it's in the correct position
+- **Attack Strategy**: 
+  1. **Construct Malicious Identifier**: Create an identifier of the form `"{ALICE_pk}_{ALICE_pepper}{BOB_pk}"`
+  2. **Hash Verification**: This identifier hashes to one of the whitelisted values (Alice's registered hash), if you specify the length up to `{BOB_pk}`
+  3. **Public Key Verification**: Bob's public key appears in the identifier (at the end)
+  4. **Both Checks Pass**: The circuit accepts this as valid despite it containing both keys
+- **Technical Details**: 
+  - Alice's pk: 32 bytes (from circuit comment)
+  - Alice's pepper: 32 bytes (from circuit comment)
+  - Bob's pk: 32 bytes (from Prover.toml)
+  - Total: 65 bytes = 32 + 1 + 32 = ALICE_pk + '_' + ALICE_pepper + ...BOB_pk appended
+  - The identifier contains Bob's key at the end but hashes to Alice's registered value
+- **Mathematical Insight**: 
+  - SHA256 is deterministic: `SHA256(ALICE_pk_ALICE_pepper_BOB_pk)` ≠ `SHA256(ALICE_pk_ALICE_pepper)`
+  - However, the first part `ALICE_pk_ALICE_pepper` alone hashes to Alice's registered digest
+  - By appending Bob's key at the end, we satisfy both conditions
+- **Impact**: Complete account takeover - Alice can authenticate as Bob while using her own registered identifier
+- **Fix**: Verify that the public key appears only at the start of the identifier, delimited by exactly one underscore
+- **Puzzle Name Insight**: "Shadow" refers to impersonating another user's identity in the authentication system
+- **Result**: Successfully created a valid proof that authenticates as Bob using Alice's credentials
+- Complete working solution demonstrating how identifier format vulnerabilities can break authentication systems

@@ -25,7 +25,8 @@ ZKHack-Puzzles/
 ├── puzzle-supervillain/                    # Puzzle F2: Supervillain - BLS Signature Rogue Key Attack
 ├── puzzle-chaos-theory/                    # Puzzle F3: Chaos Theory - ElGamal + BLS Key Reuse Attack
 ├── puzzle-zeitgeist/                       # Puzzle V1: Zeitgeist - Halo2 Verifier Polynomial Leakage Attack
-└── puzzle-dont-look-up/                    # Puzzle V2: Don't Look Up - ProtoStar Lookup Protocol Attack
+├── puzzle-dont-look-up/                    # Puzzle V2: Don't Look Up - ProtoStar Lookup Protocol Attack
+└── puzzle-shadow/                          # Puzzle V3: Shadow - JWT.pk Identity Infrastructure Attack
 ```
 
 ## Important Note
